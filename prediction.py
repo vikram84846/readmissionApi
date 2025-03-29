@@ -2,6 +2,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, conint
 from typing import Literal
 
@@ -15,6 +16,13 @@ label_encoders = joblib.load("label_encoders.pkl")
 feature_order = joblib.load("feature_columns.pkl")
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://myfrontend.com"],  # Allow your frontend
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Define the input data model with validations
 class PatientInfo(BaseModel):
@@ -31,7 +39,7 @@ class PatientInfo(BaseModel):
     additional_param1: Literal["Yes", "No"]  # New parameter
     additional_param2: Literal["Yes", "No"]  # New parameter
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict_readmission(patient_info: PatientInfo):
     try:
         # Convert user input into a DataFrame
