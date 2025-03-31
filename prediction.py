@@ -18,8 +18,7 @@ feature_order = joblib.load("feature_columns.pkl")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://myfrontend.com"],  # Allow your frontend
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow your frontend
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
